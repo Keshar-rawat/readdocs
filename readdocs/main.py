@@ -1,23 +1,25 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse
-from PyPDF2 import PdfReader
-import io
+import uvicorn
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="File Reader API")
+from readdocs.api.routers import include_routers
+from readdocs.settings import Settings
 
-@app.post("/read-file/")
-async def read_file(file: UploadFile = File(...)):
-    # Get file extension
-    filename = file.filename
-    if filename.endswith(".txt"):
-        contents = await file.read()
-        text = contents.decode("utf-8")
-    elif filename.endswith(".pdf"):
-        pdf_reader = PdfReader(io.BytesIO(await file.read()))
-        text = ""
-        for page in pdf_reader.pages:
-            text += page.extract_text() or ""
-    else:
-        raise HTTPException(status_code=400, detail="Only .txt and .pdf files are supported")
+app = FastAPI(title="ReadDocs API", version="1.0.0")
 
-    return JSONResponse(content={"filename": filename, "content": text})
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=list(Settings.ALLOW_ORIGINS),  # Convert set to list
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+async def hc():
+    return {"error": False, "msg": "Ok", "result": {"status": "SERVING"}}
+
+include_routers(app)
+
+if __name__ == "__main__":
+    uvicorn.run("readdocs.main:app", host="0.0.0.0", port=Settings.SERVICE_PORT, reload=Settings.DEBUG, loop="asyncio")

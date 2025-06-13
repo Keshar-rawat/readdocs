@@ -25,27 +25,16 @@ class Settings:
     }
     DOCUMENT_ALLOWED_EXTENSIONS: Set[str] = {"pdf"}
 
-    # MinIO Configuration
-    BUCKET_NAME: str = os.getenv("BUCKET_NAME", "default_bucket")
-    BUCKET_ACCESS_KEY: str = os.getenv("BUCKET_ACCESS_KEY", "default_access_key")
-    BUCKET_SECRET_KEY: str = os.getenv("BUCKET_SECRET_KEY", "default_secret_key")
-    MINIO_HOST: str = os.getenv("MINIO_HOST", "localhost")
-    BUCKET_PROTOCOL: str = os.getenv("BUCKET_PROTOCOL", "http")
-    BUCKET_MODE_SECURE: bool = os.getenv("BUCKET_MODE_SECURE", "false").strip().lower() == "true"
-
     # PostgreSQL Database Configuration
     DATABASE_HOST: str = os.getenv("DATABASE_HOST", "localhost")
     DATABASE_PORT: int = int(os.getenv("DATABASE_PORT", 5432))
     DATABASE_USER: str = os.getenv("DATABASE_USER", "postgres")
-    DATABASE_PASSWORD: str = os.getenv("DATABASE_PASSWORD", "password")
-    DATABASE_NAME: str = os.getenv("DATABASE_NAME", "docmint")
+    DATABASE_PASSWORD: str = os.getenv("DATABASE_PASSWORD", "ksar0805")
+    DATABASE_NAME: str = os.getenv("DATABASE_NAME", "mydatabase")
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
         f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
     )
-
-    # Chunk size for uploads
-    CHUNK_SIZE: int = int(os.getenv("CHUNK_SIZE", 512))
 
     # Secret key for validation
     SECRET_KEY: str = os.getenv("SECRET_KEY", "default_secret_key")
